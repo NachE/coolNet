@@ -50,7 +50,7 @@ http.createServer(function(req, res) {
 			//return;
 			
 		
-		}else if( err.errno == 34 ){
+		}else if( err != null && err.errno == 34 ){
 		//if no error, err.errno = null
 		
 			res.writeHead(404, {'Content-Type': mimeTypes['txt']});
