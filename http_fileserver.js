@@ -34,8 +34,8 @@ function pathJoin(uri,file){
 }
 
 function listDir(pathToList, res, req){
-	//console.log(res);
 	var pathToList = typeof pathToList !== 'undefined' ? pathToList : rootPath;
+
 	var uri = url.parse(req.url).pathname;
 	var filename = "";
 	var stats = "";
@@ -100,15 +100,20 @@ http.createServer(function(req, res) {
 	console.log("File req: " + filename);
 	
 	try {
+	
 		stats = fs.lstatSync(filename);
+		
 	} catch (e) {
+	
 		res.writeHead(404, {'Content-Type': mimeTypes['txt']});
 		res.write('HTTP 404 - File Not Found');
 		res.end();
 		return;
+		
 	}
   
 	if (stats.isFile()) {
+	
 		var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
 		
 		if (typeof mimeType === "undefined")
@@ -119,19 +124,21 @@ http.createServer(function(req, res) {
 		//fs.createReadStream('sample.txt', {start: 90, end: 99});
 		var fileStream = fs.createReadStream(filename);
 		fileStream.pipe(res);
-		res.end();
-		return;
 		
 	} else if (stats.isDirectory()) {
+	
 		res.writeHead(200, {'Content-Type': mimeTypes['html']});
 		listDir(filename, res, req);//TODO ugly function, improve 
 		res.end();
 		return;
+		
 	} else {
 
 		res.writeHead(500, {'Content-Type': mimeTypes['txt']});
 		res.write('HTTP 500 - Internal Server Error');
 		res.end();
 		return;
+		
 	}
+	
 }).listen(8900);
