@@ -13,36 +13,38 @@ var nsocket = dgram.createSocket('udp4');
 nsocket.bind(broadcastPort, '0.0.0.0');
 
 nsocket.on("message", function ( data, rinfo ) {
+
 	console.log("<-- "+rinfo.address +" say: " + data.toString());
 
 	if(data.toString() == answerMessage.toString()){
+	
 		nsocket.setBroadcast(true);
-		nsocket.send(responseMessage, 0, responseMessage.length, broadcastPort, broadcastAddress,
-					function (err,bytes) {
-						if (err)
-							console.log(err);
-						else
-							console.log("--> "+responseMessage.toString());
-				}
-		);
+		console.log("--> Sending "+responseMessage.toString());
+		nsocket.send(responseMessage, 0, responseMessage.length, broadcastPort, broadcastAddress, sendDelivered);
+		
 	}else if(data.toString() == "hi"){
+	
 		console.log("New nodeh identified with ip: "+rinfo.address);
 		//TODO:
 		//here we look for services in this ip
+		
 	}
 });
 
 nsocket.on("listening", function () {
+
 	nsocket.setBroadcast(true);
-	nsocket.send(answerMessage, 0, answerMessage.length, broadcastPort, broadcastAddress,
-				function (err,bytes) {
-					if (err)
-						console.log(err);
-					else
-						console.log("--> "+answerMessage.toString());
-			}
-	);
+	console.log("--> Sending "+answerMessage.toString())
+	nsocket.send(answerMessage, 0, answerMessage.length, broadcastPort, broadcastAddress, sendDelivered);
+	
 });
+
+function sendDelivered(err,bytes){
+	if (err)
+		console.log(err);
+	else
+		console.log("\tOK ", bytes, " bytes sent");
+}
 
  
  
