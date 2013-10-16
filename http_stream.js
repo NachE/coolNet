@@ -51,7 +51,7 @@ http.createServer(function(req, res) {
 			
 		
 		}else if( err != null && err.errno == 34 ){
-		//if no error, err.errno = null
+		//if no error, err = null
 		
 			res.writeHead(404, {'Content-Type': mimeTypes['txt']});
 			res.write('HTTP 404 - File Not Found');
